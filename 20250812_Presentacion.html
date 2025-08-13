@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historia de la Teoría Fiscal</title>
+    <!-- Tailwind CSS CDN para un estilo moderno y responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Definición de la paleta de colores y el degradado de fondo */
+        :root {
+            --color-fondo-claro: #EFEBE4;
+            --color-fondo-oscuro: #D7CCC8;
+            --color-primario: #5D5653;
+            --color-secundario: #8D6E63;
+            --color-acento-1: #6A1B9A;
+            --color-acento-2: #AB47BC;
+            --color-acento-3: #9575CD;
+            --color-acento-4: #64B5F6;
+            --color-acento-5: #4DB6AC;
+            --color-acento-6: #81C784;
+            --color-acento-7: #FFB74D;
+            --color-acento-8: #FF8A65;
+            --color-acento-9: #E57373;
+            --color-texto-oscuro: #2c2c2c;
+            --color-texto-claro: #fff;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--color-texto-oscuro);
+            line-height: 1.6;
+            background: linear-gradient(to right, var(--color-fondo-claro), var(--color-fondo-oscuro));
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .timeline-container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        
+        .timeline-container h1 {
+            font-family: serif; /* Fuente similar a la de la imagen de ejemplo */
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--color-primario);
+            margin-bottom: 2rem;
+            text-align: center;
+            letter-spacing: 0.2rem;
+        }
+        
+        .timeline-main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            width: 100%;
+            padding: 2rem 0;
+            position: relative;
+        }
+
+        /* La línea horizontal que conecta los círculos */
+        .timeline-main::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--color-secundario);
+            z-index: 1;
+        }
+
+        .era-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .era-item a {
+            text-decoration: none;
+            color: var(--color-texto-oscuro);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .era-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: 3px solid;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+        
+        .era-label-top, .era-label-bottom {
+            padding: 0.5rem 1.5rem;
+            border-radius: 9999px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--color-texto-claro);
+            white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .era-label-top {
+            margin-bottom: 1rem;
+            margin-top: 0;
+        }
+        
+        /* Asignación de colores a cada era */
+        .antiguedad .era-label-top { background-color: var(--color-acento-1); }
+        .antiguedad .era-circle { border-color: var(--color-acento-1); }
+        .antiguedad .era-label-bottom { background-color: var(--color-acento-1); }
+
+        .edadmedia .era-label-top { background-color: var(--color-acento-2); }
+        .edadmedia .era-circle { border-color: var(--color-acento-2); }
+        .edadmedia .era-label-bottom { background-color: var(--color-acento-2); }
+
+        .clasica .era-label-top { background-color: var(--color-acento-3); }
+        .clasica .era-circle { border-color: var(--color-acento-3); }
+        .clasica .era-label-bottom { background-color: var(--color-acento-3); }
+
+        .keynesiana .era-label-top { background-color: var(--color-acento-4); }
+        .keynesiana .era-circle { border-color: var(--color-acento-4); }
+        .keynesiana .era-label-bottom { background-color: var(--color-acento-4); }
+
+        .precios .era-label-top { background-color: var(--color-acento-5); }
+        .precios .era-circle { border-color: var(--color-acento-5); }
+        .precios .era-label-bottom { background-color: var(--color-acento-5); }
+
+        .contemporanea .era-label-top { background-color: var(--color-acento-6); }
+        .contemporanea .era-circle { border-color: var(--color-acento-6); }
+        .contemporanea .era-label-bottom { background-color: var(--color-acento-6); }
+
+        /* Contenedores que se ocultan y muestran. Se usa la clase 'active' para controlar la visibilidad. */
+        .era-content, .references-content {
+            display: none;
+            max-width: 900px;
+            margin: auto;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .era-content.active, .references-content.active {
+            display: block;
+        }
+        
+        .hidden-element {
+            display: none;
+        }
+
+        /* Limitar el tamaño de las imágenes para uniformidad */
+        .era-content img {
+            max-width: 100%;
+            height: auto;
+            max-height: 250px; /* Tamaño máximo para todas las imágenes */
+            width: auto;
+            border-radius: 12px;
+            margin: 1.5rem auto;
+            display: block;
+            object-fit: contain; /* Asegura que la imagen se ajuste sin distorsionarse */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .era-content h2, .era-content h3 {
+            color: var(--color-primario);
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .era-content h2 { 
+            font-size: 2rem; 
+            margin-top: 0;
+            /* Estilo específico para móviles */
+            @media (max-width: 768px) {
+                font-size: 1.5rem;
+            }
+        }
+        .era-content h3 { 
+            font-size: 1.5rem; 
+            margin-top: 1.5rem;
+            /* Estilo específico para móviles */
+            @media (max-width: 768px) {
+                font-size: 1.25rem;
+            }
+        }
+        .era-content p { 
+            font-size: 1.1rem; 
+            text-align: justify; 
+        }
+
+        .back-button {
+            display: block;
+            margin-top: 2rem;
+            width: fit-content;
+            padding: 0.8rem 1.5rem;
+            background-color: var(--color-secundario);
+            color: var(--color-texto-claro);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        
+        .back-button:hover {
+            background-color: var(--color-primario);
+            transform: translateY(-2px);
+        }
+
+        /* Botón de referencias */
+        .references-button {
+            margin-top: 2rem;
+            padding: 1rem 2rem;
+            background-color: var(--color-primario);
+            color: var(--color-texto-claro);
+            border-radius: 9999px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .references-button:hover {
+            background-color: var(--color-secundario);
+        }
+
+        .references-content {
+            text-align: left;
+        }
+        .references-content a {
+            color: var(--color-acento-4);
+            text-decoration: underline;
+            transition: color 0.3s;
+        }
+        .references-content a:hover {
+            color: var(--color-primario);
+        }
+
+        .references-content h2 {
+            text-align: center;
+        }
+
+        .references-content ul {
+            list-style-type: disc;
+            padding-left: 2rem;
+        }
+
+        .references-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .references-table-container {
+            margin-top: 2rem;
+        }
+        .references-table {
+            width: 100%;
+            border-collapse: collapse;
+            /* Se añade esta línea para que los textos largos se ajusten a la celda */
+            table-layout: fixed;
+        }
+        .references-table th, .references-table td {
+            border: 1px solid #ccc;
+            padding: 0.75rem;
+            text-align: left;
+            /* Se añade esta línea para que los enlaces largos se rompan y se ajusten al ancho de la celda */
+            word-wrap: break-word;
+        }
+        .references-table th {
+            background-color: var(--color-secundario);
+            color: var(--color-texto-claro);
+            font-weight: 600;
+        }
+        .references-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive design para apilar los elementos en móviles */
+        @media (max-width: 768px) {
+            .timeline-main {
+                flex-direction: column;
+                gap: 3rem;
+                align-items: flex-start;
+                padding-left: 20%;
+            }
+            .timeline-main::before {
+                height: calc(100% - 6rem);
+                width: 2px;
+                top: 3rem;
+                left: 10%;
+                transform: translateX(-50%);
+            }
+            .era-item {
+                flex-direction: row;
+                gap: 1.5rem;
+                align-items: center;
+                width: 100%;
+            }
+            .era-item a {
+                order: 2;
+            }
+            .era-label-top {
+                order: 1;
+                margin-top: 0;
+            }
+            .era-label-bottom {
+                order: 3;
+                margin-top: 0;
+            }
+            .era-circle {
+                position: absolute;
+                left: 10%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+            }
+            
+            .timeline-container h1 {
+                font-size: 2.2rem;
+                letter-spacing: 0.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Contenedor principal de la línea de tiempo -->
+    <div id="timeline" class="timeline-container">
+        <h1>LÍNEA DE TIEMPO</h1>
+        <div class="timeline-main">
+            <div class="era-item antiguedad">
+                <div class="era-label-top">Antigüedad</div>
+                <a href="#" class="era-circle" onclick="showEra('antiguedad')">1</a>
+                <div class="era-label-bottom">XXXI a.C. - V d.C.</div>
+            </div>
+            <div class="era-item edadmedia">
+                <div class="era-label-top">Edad Media</div>
+                <a href="#" class="era-circle" onclick="showEra('edadmedia')">2</a>
+                <div class="era-label-bottom">V d.C. - XV d.C.</div>
+            </div>
+            <div class="era-item clasica">
+                <div class="era-label-top">Teorías Clásicas</div>
+                <a href="#" class="era-circle" onclick="showEra('clasica')">3</a>
+                <div class="era-label-bottom">S. XVIII y XIX</div>
+            </div>
+            <div class="era-item keynesiana">
+                <div class="era-label-top">Teoría Keynesiana</div>
+                <a href="#" class="era-circle" onclick="showEra('keynesiana')">4</a>
+                <div class="era-label-bottom">1930s</div>
+            </div>
+            <div class="era-item precios">
+                <div class="era-label-top">Teoría de Precios</div>
+                <a href="#" class="era-circle" onclick="showEra('precios')">5</a>
+                <div class="era-label-bottom">1980s</div>
+            </div>
+            <div class="era-item contemporanea">
+                <div class="era-label-top">Teoría Contemporánea</div>
+                <a href="#" class="era-circle" onclick="showEra('contemporanea')">6</a>
+                <div class="era-label-bottom">Actualidad</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido de cada era (oculto por defecto) -->
+    <div id="antiguedad" class="era-content">
+        <h2>Antigüedad (Siglos XXXI a.C. - V d.C.)</h2>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/P1050763_Louvre_code_Hammurabi_face_rwk.JPG/250px-P1050763_Louvre_code_Hammurabi_face_rwk.JPG" alt="Relieve del Código de Hammurabi, Mesopotamia">
+        <h3>Mesopotamia y Antiguo Egipto</h3>
+        <p>En estas civilizaciones, la fiscalidad era una herramienta para el Estado. Los impuestos se pagaban en <b>especie</b> y <b>prestaciones de trabajo</b> para financiar el ejército, construcciones monumentales y sistemas de riego. El sistema egipcio usaba la crecida del Nilo para medir la productividad y calcular los tributos.</p>
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQh6oDQ0_aqvzC8CxqbgA-SFqtAm8jh9n5X0w&s" alt="Pirámides de Giza">
+        <h3>Antigua Grecia y Roma</h3>
+        <p>En Grecia, la fiscalidad se basaba en la <b>contribución ciudadana</b>. Los ciudadanos ricos ofrecían "liturgias" para financiar servicios públicos. Roma desarrolló un sistema complejo para su vasto imperio, con impuestos sobre la tierra y personas en las provincias, así como los <b>derechos de aduana</b> y las <b>herencias</b>, administrados por recaudadores privados.</p>
+        <a href="#" class="back-button" onclick="showTimeline()">Volver a la línea de tiempo</a>
+    </div>
+
+    <div id="edadmedia" class="era-content">
+        <h2>Edad Media (Siglos V d.C. - XV d.C.)</h2>
+        <img src="https://i0.wp.com/www.archivoshistoria.com/wp-content/uploads/2019/07/Piramide-pinterest.jpg" alt="Ilustración del sistema feudal">
+        <p>El sistema fiscal durante la Edad Media fue una consecuencia directa del <b>feudalismo</b>, donde el poder político y económico estaba descentralizado. Los señores feudales, reyes y la iglesia mantenían su autoridad a través de tributos. La carga fiscal recaía casi por completo en la clase campesina, que debía pagar <b>impuestos en especie</b> y <b>servicios laborales</b>.</p>
+        <a href="#" class="back-button" onclick="showTimeline()">Volver a la línea de tiempo</a>
+    </div>
+
+    <div id="clasica" class="era-content">
+        <h2>Teorías Clásicas (Siglos XVIII y XIX)</h2>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Adam_Smith_The_Muir_portrait.jpg/250px-Adam_Smith_The_Muir_portrait.jpg" alt="Adam Smith">
+        <p>Surgió con la <b>Revolución Industrial</b>, impulsada por <b>Adam Smith</b> y <b>David Ricardo</b>. Se basaba en el concepto de un <b>Estado Mínimo</b> que dejaba que el mercado se autorregulara con la "mano invisible". Los impuestos debían ser bajos y neutrales. Esta teoría fracasó durante la Gran Depresión, al no resolver el desempleo masivo ni las crisis profundas.</p>
+        <a href="#" class="back-button" onclick="showTimeline()">Volver a la línea de tiempo</a>
+    </div>
+
+    <div id="keynesiana" class="era-content">
+        <h2>Teoría Keynesiana (1930s en adelante)</h2>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/bd/%E5%87%AF%E6%81%A9%E6%96%AF%E7%9A%84%E8%82%96%E5%83%8F%E7%85%A7.jpg" alt="John Maynard Keynes">
+        <p>Nació como respuesta al fracaso de la teoría clásica durante la <b>Gran Depresión</b>. <b>John Maynard Keynes</b> argumentó que el gasto privado era insuficiente. Propuso la intervención estatal con una <b>política fiscal expansiva</b>: aumentar el <b>gasto público</b> y reducir los <b>impuestos</b>. El objetivo era reactivar la demanda y generar empleo, aceptando déficits presupuestarios temporales.</p>
+        <a href="#" class="back-button" onclick="showTimeline()">Volver a la línea de tiempo</a>
+    </div>
+
+    <div id="precios" class="era-content">
+        <h2>Teoría Fiscal del Nivel de Precios (1980s en adelante)</h2>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Ben_Bernanke_official_portrait.jpg" alt="Ben Bernanke, figura clave en la política económica moderna">
+        <p>Esta teoría, conocida como <b>FTPL</b>, surgió por la <b>estanflación</b> de los 80. Postula que el nivel de precios no es solo un fenómeno monetario, sino que depende de la <b>sostenibilidad fiscal</b> del gobierno. Si el gobierno tiene una deuda insostenible, el banco central no podrá controlar la inflación. La política fiscal es, por tanto, un ancla crucial para la estabilidad.</p>
+        <a href="#" class="back-button" onclick="showTimeline()">Volver a la línea de tiempo</a>
+    </div>
+
+    <div id="contemporanea" class="era-content">
+        <h2>Teoría Fiscal Contemporánea</h2>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Seat_of_the_European_Central_Bank_and_Frankfurt_Skyline_at_dawn_20150422_1.jpg" alt="Sede del Banco Central Europeo">
+        <p>Esta teoría entiende la política fiscal como una <b>herramienta integral</b> con múltiples objetivos. No solo busca estabilizar el ciclo económico, sino también <b>impulsar el crecimiento sostenible</b>, reducir la desigualdad y financiar retos globales. El enfoque enfatiza la importancia de la <b>transparencia fiscal</b> y el uso de reglas presupuestarias para mantener la credibilidad de los mercados.</p>
+        <a href="#" class="back-button" onclick="showTimeline()">Volver a la línea de tiempo</a>
+    </div>
+
+    <!-- Botón para mostrar referencias -->
+    <button id="show-references-btn" class="references-button" onclick="showReferences()">Ver Referencias</button>
+
+    <!-- Contenedor de referencias (oculto por defecto) -->
+    <div id="references-content" class="references-content">
+        <h2>Referencias</h2>
+        <p>A continuación, se presenta una tabla con enlaces adicionales sobre el tema.</p>
+       
+        <div class="references-table-container">
+            <h3>Enlaces del documento original:</h3>
+            <table class="references-table">
+                <thead>
+                    <tr>
+                        <th>Tema</th>
+                        <th>Enlace</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Historia de la fiscalidad</td>
+                        <td><a href="https://es.wikipedia.org/wiki/Historia_de_la_fiscalidad" target="_blank" rel="noopener noreferrer">https://es.wikipedia.org/wiki/Historia_de_la_fiscalidad</a></td>
+                    </tr>
+                    <tr>
+                        <td>Historia del pensamiento macroeconómico</td>
+                        <td><a href="https://es.wikipedia.org/wiki/Historia_del_pensamiento_macroecon%C3%B3mico" target="_blank" rel="noopener noreferrer">https://es.wikipedia.org/wiki/Historia_del_pensamiento_macroecon%C3%B3mico</a></td>
+                    </tr>
+                    <tr>
+                        <td>Teoría fiscal del nivel de precios (FTPL)</td>
+                        <td><a href="https://es.wikipedia.org/wiki/Teor%C3%ADa_fiscal_del_nivel_de_precios" target="_blank" rel="noopener noreferrer">https://es.wikipedia.org/wiki/Teor%C3%ADa_fiscal_del_nivel_de_precios</a></td>
+                    </tr>
+                    <tr>
+                        <td>Principios de economía política y tributación – David Ricardo</td>
+                        <td><a href="https://es.wikipedia.org/wiki/Principios_de_econom%C3%ADa_pol%C3%ADtica_y_tributaci%C3%B3n" target="_blank" rel="noopener noreferrer">https://es.wikipedia.org/wiki/Principios_de_econom%C3%ADa_pol%C3%ADtica_y_tributaci%C3%B3n</a></td>
+                    </tr>
+                    <tr>
+                        <td>Confrontación teoría clásica vs. keynesiana en Colombia (PDF)</td>
+                        <td><a href="https://dialnet.unirioja.es/descarga/articulo/5016732.pdf" target="_blank" rel="noopener noreferrer">https://dialnet.unirioja.es/descarga/articulo/5016732.pdf</a></td>
+                    </tr>
+                    <tr>
+                        <td>Política fiscal y desarrollo económico (PDF)</td>
+                        <td><a href="https://dialnet.unirioja.es/descarga/articulo/2496783.pdf" target="_blank" rel="noopener noreferrer">https://dialnet.unirioja.es/descarga/articulo/2496783.pdf</a></td>
+                    </tr>
+                    <tr>
+                        <td>Economía política y política fiscal – ICEFI (PDF)</td>
+                        <td><a href="https://icefi.org/sites/default/files/ctp-pf_-_economia_politica.pdf" target="_blank" rel="noopener noreferrer">https://icefi.org/sites/default/files/ctp-pf_-_economia_politica.pdf</a></td>
+                    </tr>
+                    <tr>
+                        <td>Avances y retos en historia fiscal de Colombia (SciELO)</td>
+                        <td><a href="https://www.scielo.org.mx/scielo.php?pid=S1405-22532023000200005&script=sci_arttext" target="_blank" rel="noopener noreferrer">https://www.scielo.org.mx/scielo.php?pid=S1405-22532023000200005&script=sci_arttext</a></td>
+                    </tr>
+                    <tr>
+                        <td>¿Qué es la economía keynesiana? – FMI (PDF)</td>
+                        <td><a href="https://www.imf.org/external/pubs/ft/fandd/spa/2014/09..." target="_blank" rel="noopener noreferrer">https://www.imf.org/external/pubs/ft/fandd/spa/2014/09...</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="flex justify-center">
+            <button class="back-button" onclick="showTimeline()">Volver a la línea de tiempo</button>
+        </div>
+    </div>
+
+    <!-- Script para manejar la interactividad -->
+    <script>
+        /**
+         * Oculta todos los elementos de contenido para limpiar la vista.
+         */
+        function hideAllContent() {
+            document.getElementById('timeline').classList.add('hidden-element');
+            document.getElementById('show-references-btn').classList.add('hidden-element');
+            document.getElementById('references-content').classList.remove('active');
+            document.querySelectorAll('.era-content').forEach(era => {
+                era.classList.remove('active');
+            });
+        }
+        
+        /**
+         * Muestra el contenido de una era específica y oculta los demás elementos.
+         * @param {string} eraId - El ID del elemento de contenido de la era a mostrar.
+         */
+        function showEra(eraId) {
+            hideAllContent();
+            document.getElementById(eraId).classList.add('active');
+        }
+
+        /**
+         * Muestra la línea de tiempo principal y oculta todos los contenidos.
+         */
+        function showTimeline() {
+            hideAllContent();
+            document.getElementById('timeline').classList.remove('hidden-element');
+            document.getElementById('show-references-btn').classList.remove('hidden-element');
+        }
+
+        /**
+         * Muestra el contenido de las referencias y oculta los demás elementos.
+         */
+        function showReferences() {
+            hideAllContent();
+            document.getElementById('references-content').classList.add('active');
+        }
+    </script>
+</body>
+</html>
